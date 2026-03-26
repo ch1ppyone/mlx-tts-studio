@@ -93,7 +93,7 @@ Strong cues such as `(singing)` or `(humming)` can spill into later lines, swall
 ## Demo
 
 <p align="center">
-  <img src="assets/demo.png" alt="MLX TTS Studio interface" width="720">
+  <img src="assets/demo.png?v=20260326" alt="MLX TTS Studio interface" width="720">
 </p>
 
 ---
