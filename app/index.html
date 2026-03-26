@@ -3,206 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MLX TTS Studio">
+<meta name="theme-color" content="#6366f1">
 <title>MLX TTS Studio</title>
 <link rel="icon" href="/logo.png" type="image/png">
-<style>
-:root {
-  --bg: #f8f9fa;
-  --card: #ffffff;
-  --input: #f4f4f5;
-  --border: #e4e4e7;
-  --border-h: #d4d4d8;
-  --text: #18181b;
-  --muted: #71717a;
-  --dim: #a1a1aa;
-  --accent: #6366f1;
-  --accent-h: #4f46e5;
-  --accent-soft: rgba(99,102,241,.06);
-  --danger: #ef4444;
-  --radius: 10px;
-  --radius-s: 6px;
-  --wave-on: #6366f1;
-  --wave-off: #d4d4d8;
-  --shadow: 0 1px 3px rgba(0,0,0,.06);
-}
-html[data-theme="dark"] {
-  --bg: #09090b;
-  --card: #131316;
-  --input: #1a1a1f;
-  --border: #27272a;
-  --border-h: #3f3f46;
-  --text: #fafafa;
-  --muted: #a1a1aa;
-  --dim: #52525b;
-  --accent: #818cf8;
-  --accent-h: #6d78f4;
-  --accent-soft: rgba(129,140,248,.08);
-  --danger: #f87171;
-  --wave-on: #818cf8;
-  --wave-off: #3f3f46;
-  --shadow: none;
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  background:var(--bg);color:var(--text);
-  min-height:100vh;display:flex;justify-content:center;
-  padding:40px 16px 80px;line-height:1.5;font-size:14px;
-}
-.app{width:100%;max-width:680px}
-
-header{display:flex;align-items:center;gap:12px;margin-bottom:32px}
-header .logo{height:256px;object-fit:contain}
-header .spacer{flex:1}
-.hdr-btn{
-  width:28px;height:28px;border-radius:50%;
-  background:var(--card);border:1px solid var(--border);
-  color:var(--muted);font-size:13px;font-weight:700;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;
-}
-.hdr-btn:hover{border-color:var(--accent);color:var(--accent)}
-.lang-toggle{display:flex;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-s);overflow:hidden}
-.lang-btn{background:none;border:none;color:var(--muted);padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .12s}
-.lang-btn.active{background:var(--accent-soft);color:var(--accent)}
-.lang-btn:hover:not(.active){color:var(--text)}
-
-label{display:block;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
-label .val{color:var(--text);font-variant-numeric:tabular-nums}
-label .opt{font-weight:400;text-transform:none;letter-spacing:0;color:var(--dim)}
-.field{margin-bottom:16px}
-
-select,input[type="text"],textarea{
-  width:100%;background:var(--input);color:var(--text);
-  border:1px solid var(--border);border-radius:var(--radius-s);
-  padding:10px 12px;font-size:14px;font-family:inherit;
-  outline:none;transition:border-color .15s;
-}
-select:hover,input[type="text"]:hover,textarea:hover{border-color:var(--border-h)}
-select:focus,input[type="text"]:focus,textarea:focus{border-color:var(--accent)}
-select{cursor:pointer;-webkit-appearance:none;appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a1a1aa'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-textarea{resize:vertical;min-height:140px;line-height:1.6}
-.char-count{display:block;text-align:right;font-size:11px;color:var(--dim);margin-top:4px}
-
-input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer}
-input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:var(--accent);border-radius:50%;border:2px solid var(--bg);cursor:pointer;transition:transform .12s}
-input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.15)}
-
-.type-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.type-card{padding:14px 10px;border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;text-align:center;transition:all .15s;background:var(--card);box-shadow:var(--shadow)}
-.type-card:hover{border-color:var(--border-h);background:var(--input)}
-.type-card.active{border-color:var(--accent);background:var(--accent-soft)}
-.type-card.disabled{opacity:.3;cursor:not-allowed;pointer-events:none}
-.type-card .tc-name{font-size:13px;font-weight:600;margin-bottom:2px}
-.type-card.active .tc-name{color:var(--accent)}
-.type-card .tc-desc{font-size:11px;color:var(--muted);line-height:1.3}
-@media(max-width:480px){.type-cards{grid-template-columns:1fr}}
-
-.model-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}
-.model-id{font-size:11px;color:var(--dim);font-family:'SF Mono',Menlo,Consolas,monospace;word-break:break-all;padding:6px 10px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-s);min-height:30px;line-height:1.6}
-.model-id.overridden{text-decoration:line-through;opacity:.4}
-
-.row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.row-3{display:grid;grid-template-columns:140px 1fr 1fr;gap:12px;margin-bottom:16px}
-@media(max-width:560px){.row-2,.row-3,.model-row{grid-template-columns:1fr}}
-.adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:560px){.adv-grid{grid-template-columns:1fr}}
-
-.voice-section{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;animation:fadeIn .2s ease;box-shadow:var(--shadow)}
-.voice-section .field:last-child{margin-bottom:0}
-
-.dropzone{border:2px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;color:var(--dim);font-size:13px;transition:border-color .15s, background .15s}
-.dropzone:hover,.dropzone.over{border-color:var(--accent);background:var(--accent-soft)}
-.ref-info{display:flex;align-items:center;gap:8px;background:var(--input);border:1px solid var(--border);border-radius:var(--radius-s);padding:8px 12px;margin-top:8px}
-.ref-info .name{flex:1;font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ref-info button{background:none;border:none;color:var(--dim);cursor:pointer;font-size:15px;padding:2px 4px}
-.ref-info button:hover{color:var(--danger)}
-
-details.advanced{margin-bottom:20px}
-details.advanced summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);padding:8px 0;user-select:none;list-style:none}
-details.advanced summary::before{content:"▸ ";transition:transform .15s}
-details.advanced[open] summary::before{content:"▾ "}
-.adv-body{padding-top:8px}
-.adv-sep{border:0;border-top:1px solid var(--border);margin:12px 0 16px}
-
-.gen-btn{width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s,opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px}
-.gen-btn:hover:not(:disabled){background:var(--accent-h)}
-.gen-btn:disabled{opacity:.5;cursor:not-allowed}
-.gen-btn .icon{font-size:12px}
-.gen-btn.busy{background:var(--border-h);cursor:wait}
-
-@keyframes spin{to{transform:rotate(360deg)}}
-.spinner{width:16px;height:16px;border:2px solid var(--border-h);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
-.status{display:flex;align-items:center;gap:10px;padding:12px 16px;margin-top:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--muted);flex-wrap:wrap}
-[hidden]{display:none !important}
-.cancel-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-s);color:var(--dim);padding:4px 12px;font-size:12px;font-weight:500;cursor:pointer;flex-shrink:0;transition:all .15s;font-family:inherit}
-.cancel-btn:hover{border-color:var(--danger);color:var(--danger)}
-.status-content{flex:1;min-width:0}
-.progress-wrap{width:100%;margin-top:8px}
-.progress-bar{width:100%;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s ease;width:0}
-.progress-detail{font-size:11px;color:var(--dim);margin-top:4px;font-family:'SF Mono',Menlo,Consolas,monospace}
-
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.result{margin-top:20px;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);animation:fadeIn .25s ease;box-shadow:var(--shadow)}
-.wplayer{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.wp-play{width:44px;height:44px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
-.wp-play:hover{background:var(--accent-h)}
-.wp-wave-wrap{flex:1;height:52px;cursor:pointer;position:relative}
-.wp-wave{width:100%;height:100%;display:block}
-.wp-time{font-size:11px;color:var(--dim);font-family:'SF Mono',Menlo,Consolas,monospace;white-space:nowrap;min-width:80px;text-align:right}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;font-size:12px;margin-bottom:16px}
-.stats-grid .k{color:var(--dim)}
-.stats-grid .v{color:var(--text);font-family:'SF Mono',Menlo,Consolas,monospace;font-size:12px}
-.dl-btn{display:inline-flex;align-items:center;gap:6px;background:var(--input);border:1px solid var(--border);border-radius:var(--radius-s);padding:8px 16px;color:var(--text);font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;transition:border-color .15s}
-.dl-btn:hover{border-color:var(--accent)}
-.error-box{margin-top:16px;padding:12px 16px;background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.2);border-radius:var(--radius);font-size:13px;color:var(--danger);word-break:break-word}
-.kbd-hint{font-size:11px;color:var(--dim);text-align:center;margin-top:8px}
-kbd{background:var(--input);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-family:inherit;font-size:11px}
-
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(4px);animation:fadeIn .15s ease}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:520px;width:calc(100% - 32px);max-height:calc(100vh - 80px);overflow-y:auto}
-.modal-head{display:flex;align-items:center;margin-bottom:16px}
-.modal-head h2{flex:1;font-size:16px;font-weight:700}
-.modal-head .close{background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:var(--radius-s)}
-.modal-head .close:hover{color:var(--text);background:var(--input)}
-.modal h3{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin:18px 0 8px}
-.modal dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin-bottom:4px}
-.modal dt{font-size:13px;font-weight:600;color:var(--text)}
-.modal dd{font-size:13px;color:var(--muted);margin:0;line-height:1.5}
-.modal .tip{margin-top:18px;padding:10px 14px;background:var(--accent-soft);border-radius:var(--radius-s);font-size:12px;color:var(--accent);line-height:1.5}
-
-.preview-btn{width:40px;height:40px;border-radius:var(--radius-s);background:var(--input);border:1px solid var(--border);color:var(--muted);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-family:inherit}
-.preview-btn:hover{border-color:var(--accent);color:var(--accent)}
-.preview-btn.loading{pointer-events:none;opacity:.5}
-.model-id-row{display:flex;gap:8px;align-items:stretch;margin-bottom:16px}
-.copy-cli{padding:0 12px;background:var(--input);border:1px solid var(--border);border-radius:var(--radius-s);color:var(--dim);font-size:11px;font-weight:600;font-family:'SF Mono',Menlo,Consolas,monospace;cursor:pointer;transition:all .15s;white-space:nowrap}
-.copy-cli:hover{border-color:var(--accent);color:var(--accent)}
-
-.history{margin-top:24px}
-.history h3{font-size:12px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px}
-.hist-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:8px;animation:fadeIn .2s ease}
-.hist-meta{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px}
-.hist-text{flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hist-voice{color:var(--accent);font-weight:500;flex-shrink:0}
-.hist-item audio{width:100%;margin-bottom:6px;border-radius:var(--radius-s)}
-.hist-actions{display:flex;align-items:center;gap:8px;font-size:11px}
-.hist-time{color:var(--dim);flex:1}
-.hist-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-s);color:var(--muted);padding:3px 8px;font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s}
-.hist-btn:hover{border-color:var(--accent);color:var(--accent)}
-.hist-btn.del:hover{border-color:var(--danger);color:var(--danger)}
-
-textarea.drag-over{border-color:var(--accent) !important;background:var(--accent-soft) !important}
-</style>
+<link rel="apple-touch-icon" href="/logo.png">
+<link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-<div class="app">
+
+<div id="boot-screen" class="boot-screen">
+  <img src="/logo.png" alt="" class="boot-logo">
+  <div class="boot-text">Loading&hellip;</div>
+</div>
+
+<div class="app" id="app-root" style="display:none">
 
   <header>
     <img src="/logo.png" alt="MLX TTS Studio" class="logo">
+    <div class="hw-badge" id="hw-badge" hidden></div>
     <div class="spacer"></div>
+    <button class="hdr-btn" id="system-info-btn" title="System info">&#9881;</button>
     <button class="hdr-btn" id="theme-btn" title="Toggle theme">&#9790;</button>
     <button class="hdr-btn" id="help-btn" title="Help">?</button>
     <div class="lang-toggle">
@@ -212,180 +34,137 @@ textarea.drag-over{border-color:var(--accent) !important;background:var(--accent
     </div>
   </header>
 
-  <div class="field" style="margin-bottom:12px">
-    <label data-t="model_type">Model Type</label>
-    <div class="type-cards" id="type-cards">
-      <div class="type-card active" data-type="CustomVoice">
-        <div class="tc-name" data-t="t_custom">Custom Voice</div>
-        <div class="tc-desc" data-t="t_custom_d">Built-in preset speakers</div>
-      </div>
-      <div class="type-card" data-type="Base">
-        <div class="tc-name" data-t="t_base">Base</div>
-        <div class="tc-desc" data-t="t_base_d">Clone voice from audio</div>
-      </div>
-      <div class="type-card" data-type="VoiceDesign">
-        <div class="tc-name" data-t="t_design">Voice Design</div>
-        <div class="tc-desc" data-t="t_design_d">Create from text prompt</div>
-      </div>
+  <div class="engine-tabs" id="engine-tabs"></div>
+  <div class="engine-desc" id="engine-desc"></div>
+  <div id="welcome-slot">
+    <div class="welcome-banner">
+      <div class="wb-title" data-t="welcome_title"></div>
+      <div class="wb-text" data-th="welcome_body"></div>
     </div>
   </div>
 
-  <div class="model-row">
-    <div class="field" style="margin-bottom:8px">
-      <label data-t="size">Size</label>
-      <select id="sel-size">
-        <option value="1.7B" data-t="s17" selected>1.7B — Best quality</option>
-        <option value="0.6B" data-t="s06">0.6B — Lighter, faster</option>
-      </select>
-    </div>
-    <div class="field" style="margin-bottom:8px">
-      <label data-t="precision">Precision</label>
-      <select id="sel-quant">
-        <option value="bf16" data-t="q_bf16" selected>bf16 — Full precision</option>
-        <option value="8bit" data-t="q_8bit">8-bit — Balanced</option>
-        <option value="6bit">6-bit</option>
-        <option value="5bit">5-bit</option>
-        <option value="4bit" data-t="q_4bit">4-bit — Smallest</option>
-      </select>
-    </div>
+  <div class="sect" id="type-section">
+    <div class="type-cards" id="type-cards"></div>
+  </div>
+
+  <div class="field" style="margin-bottom:8px">
+    <label data-t="model"></label>
+    <select id="sel-model"></select>
   </div>
   <div class="model-id-row">
     <div class="model-id" id="model-id" style="flex:1"></div>
-    <button class="copy-cli" id="copy-cli" title="Copy CLI command">CLI</button>
-  </div>
-  <div class="field">
-    <input type="text" id="custom-model" data-tp="custom_ph">
+    <span class="cache-badge" id="model-cache-badge"></span>
+    <button class="copy-cli" id="show-cache-btn" data-t="show_finder" hidden></button>
+    <button class="copy-cli" id="copy-cli-btn" data-t="copy_cli"></button>
   </div>
 
-  <div class="voice-section" id="vs-base" hidden>
+  <div class="voice-section sect" id="vs-base">
     <div class="field">
-      <label data-t="ref_audio">Reference Audio</label>
-      <div class="dropzone" id="dropzone" data-t="ref_drop">Drop an audio file here, or click to upload</div>
-      <input type="file" id="ref-file" accept="audio/*" hidden>
-      <div class="ref-info" id="ref-info" hidden>
-        <span class="name" id="ref-name"></span>
-        <button id="ref-rm" title="Remove">&times;</button>
+      <label data-t="ref_audio"></label>
+      <div class="dropzone" id="ref-dropzone" data-t="ref_drop"></div>
+      <input type="file" id="ref-file" accept="audio/*,.m4a,audio/mp4" hidden>
+      <div class="ref-actions">
+        <button class="ref-record-btn" id="ref-record-btn">
+          <span class="rec-dot"></span>
+          <span data-t="ref_record"></span>
+        </button>
+        <button class="ref-record-btn" id="ref-library-btn" data-t="ref_library"></button>
+        <div class="ref-recording" id="ref-recording" hidden>
+          <span class="rec-pulse"></span>
+          <span class="rec-timer" id="rec-timer">0:00</span>
+          <button class="ref-stop-btn" id="ref-stop-btn" data-t="ref_stop"></button>
+        </div>
+        <button class="ref-clear-btn" id="ref-clear-btn" hidden data-t="ref_remove"></button>
+      </div>
+      <div class="ref-preprocess">
+        <div class="ref-pre-head">
+          <span data-t="pre_title"></span>
+          <span class="ref-pre-hint" data-t="pre_best"></span>
+        </div>
+        <div class="ref-pre-grid">
+          <label class="check"><input type="checkbox" id="pre-auto" checked> <span data-t="pre_auto"></span></label>
+          <label class="check"><input type="checkbox" id="pre-trim" checked> <span data-t="pre_trim"></span></label>
+          <label class="check"><input type="checkbox" id="pre-normalize" checked> <span data-t="pre_normalize"></span></label>
+          <label class="check"><input type="checkbox" id="pre-denoise"> <span data-t="pre_denoise"></span></label>
+          <label class="check"><input type="checkbox" id="pre-highpass"> <span data-t="pre_highpass"></span></label>
+        </div>
+        <div class="ref-pre-note" data-t="pre_note"></div>
+        <div class="ref-pre-tools">
+          <button class="ref-pre-btn" id="preprocess-btn" data-t="pre_apply"></button>
+          <span class="ref-pre-status" id="preprocess-status"></span>
+        </div>
+        <div class="ref-report" id="ref-report" hidden></div>
+        <audio id="ref-preview-audio" controls hidden></audio>
       </div>
     </div>
-    <div class="field" id="ref-text-wrap" hidden>
-      <label><span data-t="ref_transcript">Reference Transcript</span> <span class="opt" data-t="ref_opt">(optional)</span></label>
-      <input type="text" id="ref-text" data-tp="ref_text_ph">
+    <div class="field">
+      <label data-t="ref_text"></label>
+      <input type="text" id="ref-text">
     </div>
   </div>
 
-  <div class="voice-section" id="vs-custom">
+  <div class="voice-section sect" id="vs-voices">
+    <div class="voice-filter-wrap" id="voice-filter-wrap" style="display:none">
+      <input type="text" class="voice-filter" id="voice-filter" data-t="filter_ph">
+      <div class="voice-count" id="voice-count"></div>
+    </div>
+    <div id="lang-chips" class="lang-chips" style="display:none"></div>
     <div class="field" style="margin-bottom:0">
-      <label data-t="voice">Voice</label>
-      <div style="display:flex;gap:8px">
-        <select id="voice" style="flex:1">
-          <option value="Vivian" data-t="v_vivian" selected>Vivian — bright, edgy female (zh)</option>
-          <option value="Serena" data-t="v_serena">Serena — warm, gentle female (zh)</option>
-          <option value="Uncle_Fu" data-t="v_uncle">Uncle Fu — seasoned, mellow male (zh)</option>
-          <option value="Dylan" data-t="v_dylan">Dylan — clear, natural male (zh, Beijing)</option>
-          <option value="Eric" data-t="v_eric">Eric — lively, husky male (zh, Sichuan)</option>
-          <option value="Ryan" data-t="v_ryan">Ryan — dynamic, rhythmic male (en)</option>
-          <option value="Aiden" data-t="v_aiden">Aiden — sunny, clear male (en)</option>
-          <option value="Ono_Anna" data-t="v_anna">Ono Anna — playful, nimble female (ja)</option>
-          <option value="Sohee" data-t="v_sohee">Sohee — warm, emotional female (ko)</option>
-        </select>
-        <button class="preview-btn" id="preview-btn" title="Preview voice">&#9654;</button>
+      <label data-t="voice"></label>
+      <div class="voice-row">
+        <select id="sel-voice" style="flex:1"></select>
+        <button class="fav-btn" id="fav-btn" title="Favorite">&#9734;</button>
+        <button class="preview-btn" id="preview-btn">&#9654;</button>
       </div>
     </div>
   </div>
 
-  <div class="voice-section" id="vs-design" hidden>
+  <div class="voice-section sect" id="vs-design">
     <div class="field" style="margin-bottom:0">
-      <label data-t="voice_desc">Voice Description</label>
-      <input type="text" id="voice-desc" data-tp="voice_desc_ph">
+      <label data-t="voice_desc"></label>
+      <input type="text" id="voice-desc" data-t="voice_desc_ph">
     </div>
   </div>
 
-  <div class="field" id="emotion-wrap">
-    <label data-t="style">Style / Emotion</label>
+  <div class="voice-section sect" id="dia-speakers-wrap" style="display:none"></div>
+
+  <div class="field sect" id="emotion-wrap">
+    <label data-t="emotion"></label>
     <select id="emotion">
-      <option value="" data-t="e_neutral" selected>Neutral</option>
-      <option value="Speak with a happy, cheerful tone" data-t="e_happy">Happy</option>
-      <option value="Speak with a sad, melancholic tone" data-t="e_sad">Sad</option>
-      <option value="Speak with an angry, intense tone" data-t="e_angry">Angry</option>
-      <option value="Speak in a calm, soothing manner" data-t="e_calm">Calm</option>
-      <option value="Speak with excitement and energy" data-t="e_excited">Excited</option>
-      <option value="Speak in a soft whisper" data-t="e_whisper">Whisper</option>
-      <option value="Speak like a professional news anchor" data-t="e_news">News anchor</option>
-      <option value="Speak like telling a story, warm and engaging" data-t="e_story">Storytelling</option>
+      <option value="" data-t="e_neutral"></option>
+      <option value="Speak with a happy, cheerful tone" data-t="e_happy"></option>
+      <option value="Speak with a sad, melancholic tone" data-t="e_sad"></option>
+      <option value="Speak with an angry, intense tone" data-t="e_angry"></option>
+      <option value="Speak in a calm, soothing manner" data-t="e_calm"></option>
+      <option value="Speak with excitement and energy" data-t="e_excited"></option>
+      <option value="Speak in a soft whisper" data-t="e_whisper"></option>
+      <option value="Speak like a professional news anchor" data-t="e_news"></option>
+      <option value="Speak like telling a story, warm and engaging" data-t="e_story"></option>
     </select>
   </div>
 
-  <div class="row-3">
-    <div class="field">
-      <label data-t="language">Language</label>
-      <select id="lang">
-        <option value="auto" data-t="l_auto">Auto</option>
-        <option value="en" data-t="l_en">English</option>
-        <option value="zh" data-t="l_zh">Chinese</option>
-        <option value="ja" data-t="l_ja">Japanese</option>
-        <option value="ko" data-t="l_ko">Korean</option>
-        <option value="ru" data-t="l_ru">Russian</option>
-        <option value="es" data-t="l_es">Spanish</option>
-        <option value="fr" data-t="l_fr">French</option>
-        <option value="de" data-t="l_de">German</option>
-        <option value="pt" data-t="l_pt">Portuguese</option>
-        <option value="ar" data-t="l_ar">Arabic</option>
-      </select>
-    </div>
-    <div class="field">
-      <label><span data-t="speed">Speed</span> <span class="val" id="speed-v">1.0</span>x</label>
-      <input type="range" id="speed" min="0.5" max="2.0" step="0.1" value="1.0">
-    </div>
-    <div class="field">
-      <label><span data-t="temperature">Temperature</span> <span class="val" id="temp-v">0.70</span></label>
-      <input type="range" id="temp" min="0.0" max="1.5" step="0.05" value="0.7">
-    </div>
+  <div id="params-row"></div>
+  <div id="dia-toolbar-slot"></div>
+
+  <div class="field" id="text-field">
+    <label data-t="text"></label>
+    <textarea id="text" rows="6" data-t="text_ph"></textarea>
+    <span class="char-count"><span id="char-count">0</span></span>
   </div>
 
-  <div class="field">
-    <label data-t="text_label">Text</label>
-    <textarea id="text" data-tp="text_ph" rows="6"></textarea>
-    <span class="char-count"><span id="chars">0</span> <span data-t="chars">characters</span></span>
-  </div>
+  <div id="dia-editor-wrap" style="display:none"></div>
+  <div id="dia-preview"></div>
 
   <details class="advanced">
-    <summary data-t="advanced">Advanced</summary>
-    <div class="adv-body">
-      <div class="field" id="adv-instruct-wrap">
-        <label><span data-t="instruction">Instruction</span> <span class="opt" data-t="instr_opt">(e.g. "Read cheerfully")</span></label>
-        <input type="text" id="instruct" data-tp="instr_ph">
-      </div>
-      <div class="field" id="adv-voice-wrap">
-        <label><span data-t="voice_override">Voice Name</span> <span class="opt" data-t="override_opt">(override)</span></label>
-        <input type="text" id="adv-voice" data-tp="voice_over_ph">
-      </div>
-      <hr class="adv-sep">
-      <div class="adv-grid">
-        <div class="field">
-          <label>Top P <span class="val" id="topp-v">0.90</span></label>
-          <input type="range" id="top-p" min="0.0" max="1.0" step="0.05" value="0.9">
-        </div>
-        <div class="field">
-          <label>Top K <span class="val" id="topk-v">50</span></label>
-          <input type="range" id="top-k" min="1" max="200" step="1" value="50">
-        </div>
-        <div class="field">
-          <label><span data-t="rep_pen">Repetition Penalty</span> <span class="val" id="repp-v">1.10</span></label>
-          <input type="range" id="rep-pen" min="1.0" max="2.0" step="0.05" value="1.1">
-        </div>
-      </div>
-      <div class="field">
-        <label>Max Tokens <span class="val" id="tok-v">4096</span></label>
-        <input type="range" id="max-tokens" min="512" max="8192" step="256" value="4096">
-      </div>
-    </div>
+    <summary data-t="adv"></summary>
+    <div class="adv-body" id="adv-body"></div>
   </details>
 
-  <button class="gen-btn" id="gen-btn">
+  <button class="gen-btn" id="generate-btn">
     <span class="icon">&#9654;</span>
-    <span id="gen-label" data-t="generate">Generate</span>
+    <span data-t="generate"></span>
   </button>
-  <div class="kbd-hint"><kbd>&#8984;</kbd>+<kbd>Enter</kbd> <span data-t="kbd_hint">to generate</span></div>
+  <div class="kbd-hint"><kbd>&#8984;</kbd>+<kbd>Enter</kbd> <span data-t="kbd_hint"></span></div>
 
   <div class="status" id="status" hidden>
     <div class="spinner"></div>
@@ -396,764 +175,76 @@ textarea.drag-over{border-color:var(--accent) !important;background:var(--accent
         <div class="progress-detail" id="progress-detail"></div>
       </div>
     </div>
-    <button class="cancel-btn" id="cancel-btn" data-t="cancel">Cancel</button>
+    <button class="cancel-btn" id="cancel-btn" data-t="cancel"></button>
   </div>
+
+  <details class="terminal-details" id="terminal-wrap" hidden open>
+    <summary>
+      <span data-t="terminal"></span>
+      <span class="terminal-actions">
+        <button class="term-btn" id="clear-logs-btn" data-t="clear_logs"></button>
+        <button class="term-btn" id="copy-logs-btn" data-t="copy_logs"></button>
+      </span>
+    </summary>
+    <div class="terminal-body">
+      <pre id="terminal-log"></pre>
+    </div>
+  </details>
 
   <div class="error-box" id="error" hidden></div>
 
-  <div class="result" id="result" hidden>
-    <div class="wplayer">
-      <button class="wp-play" id="wp-play">&#9654;</button>
-      <div class="wp-wave-wrap" id="wp-wave-wrap">
-        <canvas class="wp-wave" id="wp-wave"></canvas>
-      </div>
-      <span class="wp-time" id="wp-time">0:00 / 0:00</span>
-    </div>
-    <audio id="player" hidden></audio>
-    <div class="stats-grid" id="stats"></div>
-    <a class="dl-btn" id="dl-btn" data-t="download">Download WAV</a>
+  <div class="result" id="result" hidden></div>
+
+  <div class="history">
+    <h3 data-t="history"></h3>
+    <div id="history-list"></div>
   </div>
 
-  <div class="history" id="history" hidden>
-    <h3 data-t="hist_title">History</h3>
-    <div id="hist-list"></div>
+  <div class="modal-overlay" id="help-modal" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <h2 data-t="help_title"></h2>
+        <button class="close" id="help-close">&times;</button>
+      </div>
+      <div id="help-body"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="system-modal" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <h2 data-t="sys_title"></h2>
+        <button class="close" id="system-close">&times;</button>
+      </div>
+      <div id="system-body"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="reflib-modal" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <h2 data-t="ref_library_title"></h2>
+        <button class="close" id="reflib-close">&times;</button>
+      </div>
+      <div id="reflib-body"></div>
+    </div>
+  </div>
+
+  <div class="onboarding-overlay" id="onboarding-overlay" hidden>
+    <div class="onboarding-card">
+      <img src="/logo.png" alt="" class="onboarding-logo">
+      <h2 data-t="onboard_title"></h2>
+      <ul class="onboarding-list">
+        <li data-t="onboard_p1"></li>
+        <li data-t="onboard_p2"></li>
+        <li data-t="onboard_p3"></li>
+        <li data-t="onboard_p4"></li>
+      </ul>
+      <button class="onboarding-btn" id="onboarding-dismiss" data-t="onboard_dismiss"></button>
+    </div>
   </div>
 
 </div>
-
-<script>
-const I = {
-en: {
-  model_type:'Model Type',
-  t_custom:'Custom Voice', t_custom_d:'Built-in preset speakers',
-  t_base:'Base', t_base_d:'Clone voice from audio',
-  t_design:'Voice Design', t_design_d:'Create from text prompt',
-  size:'Size', s17:'1.7B \u2014 Best quality', s06:'0.6B \u2014 Lighter, faster',
-  precision:'Precision', q_bf16:'bf16 \u2014 Full precision', q_8bit:'8-bit \u2014 Balanced', q_4bit:'4-bit \u2014 Smallest',
-  custom_ph:'Or override with any HuggingFace model ID',
-  ref_audio:'Reference Audio', ref_drop:'Drop an audio file here, or click to upload',
-  ref_transcript:'Reference Transcript', ref_opt:'(optional \u2014 auto-transcribed if empty)',
-  ref_text_ph:'What is said in the reference clip',
-  voice:'Voice', voice_desc:'Voice Description',
-  voice_desc_ph:'e.g. "A calm young male voice with warmth and clarity"',
-  language:'Language',
-  l_auto:'Auto',l_en:'English',l_zh:'Chinese',l_ja:'Japanese',l_ko:'Korean',
-  l_ru:'Russian',l_es:'Spanish',l_fr:'French',l_de:'German',l_pt:'Portuguese',l_ar:'Arabic',
-  speed:'Speed', temperature:'Temperature',
-  text_label:'Text', text_ph:'Enter text to synthesize\u2026', chars:'characters',
-  advanced:'Advanced',
-  instruction:'Instruction', instr_opt:'(e.g. "Read cheerfully")',
-  instr_ph:'Modify speaking style \u2014 works with any model type',
-  voice_override:'Voice Name', override_opt:'(override)',
-  voice_over_ph:'Speaker name for models that support it',
-  rep_pen:'Repetition Penalty',
-  generate:'Generate', generating:'Generating\u2026', kbd_hint:'to generate',
-  download:'Download WAV',
-  st_ready:'Model ready', st_download:'Downloading model\u2026',
-  st_loading:'Loading weights\u2026', st_generating:'Generating speech\u2026',
-  dur:'Duration',rtf:'Real-time factor',proc:'Processing',mem:'Peak memory',total:'Total time',fsize:'File size',
-  m_title:'Qwen3-TTS Models',
-  m_type:'Type', m_base:'Voice cloning from an audio sample \u2014 most flexible',
-  m_custom:'Ready-to-use preset speakers (e.g. Vivian) \u2014 quickest start',
-  m_design:'Design a new voice via text description \u2014 no sample needed',
-  m_size:'Size', m_06:'Lighter, faster, lower quality ceiling',
-  m_17:'Best quality \u2014 recommended for powerful hardware',
-  m_prec:'Precision', m_bf16:'Full precision \u2014 best quality, most memory (~4.5 GB for 1.7B)',
-  m_8bit:'Good balance \u2014 nearly same quality, ~2\u00d7 smaller',
-  m_4bit:'Smallest \u2014 fast, may lose subtle nuance',
-  m_tip:'For M4 Max: use 1.7B + bf16. Base for cloning, CustomVoice for presets, VoiceDesign for text-designed voices.',
-  v_vivian:'Vivian \u2014 bright, edgy female (zh)',
-  v_serena:'Serena \u2014 warm, gentle female (zh)',
-  v_uncle:'Uncle Fu \u2014 seasoned, mellow male (zh)',
-  v_dylan:'Dylan \u2014 clear, natural male (zh, Beijing)',
-  v_eric:'Eric \u2014 lively, husky male (zh, Sichuan)',
-  v_ryan:'Ryan \u2014 dynamic, rhythmic male (en)',
-  v_aiden:'Aiden \u2014 sunny, clear male (en)',
-  v_anna:'Ono Anna \u2014 playful, nimble female (ja)',
-  v_sohee:'Sohee \u2014 warm, emotional female (ko)',
-  style:'Style / Emotion',
-  e_neutral:'Neutral', e_happy:'Happy', e_sad:'Sad', e_angry:'Angry',
-  e_calm:'Calm', e_excited:'Excited', e_whisper:'Whisper',
-  e_news:'News anchor', e_story:'Storytelling',
-  hist_title:'History', hist_repeat:'Repeat',
-  est_sec:'sec',
-  cancel:'Cancel', cancelled:'Cancelled',
-},
-ru: {
-  model_type:'\u0422\u0438\u043f \u043c\u043e\u0434\u0435\u043b\u0438',
-  t_custom:'Custom Voice', t_custom_d:'\u0412\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u044b\u0435 \u043f\u0440\u0435\u0441\u0435\u0442-\u0433\u043e\u043b\u043e\u0441\u0430',
-  t_base:'Base', t_base_d:'\u041a\u043b\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0433\u043e\u043b\u043e\u0441\u0430 \u043f\u043e \u0430\u0443\u0434\u0438\u043e',
-  t_design:'Voice Design', t_design_d:'\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u0433\u043e\u043b\u043e\u0441 \u043f\u043e \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u044e',
-  size:'\u0420\u0430\u0437\u043c\u0435\u0440', s17:'1.7B \u2014 \u041b\u0443\u0447\u0448\u0435\u0435 \u043a\u0430\u0447\u0435\u0441\u0442\u0432\u043e', s06:'0.6B \u2014 \u041b\u0435\u0433\u0447\u0435, \u0431\u044b\u0441\u0442\u0440\u0435\u0435',
-  precision:'\u0422\u043e\u0447\u043d\u043e\u0441\u0442\u044c', q_bf16:'bf16 \u2014 \u041f\u043e\u043b\u043d\u0430\u044f \u0442\u043e\u0447\u043d\u043e\u0441\u0442\u044c', q_8bit:'8-bit \u2014 \u0411\u0430\u043b\u0430\u043d\u0441', q_4bit:'4-bit \u2014 \u041c\u0438\u043d\u0438\u043c\u0430\u043b\u044c\u043d\u044b\u0439',
-  custom_ph:'\u0418\u043b\u0438 \u0432\u0441\u0442\u0430\u0432\u044c\u0442\u0435 \u043b\u044e\u0431\u043e\u0439 HuggingFace model ID',
-  ref_audio:'\u0420\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u043d\u043e\u0435 \u0430\u0443\u0434\u0438\u043e', ref_drop:'\u041f\u0435\u0440\u0435\u0442\u0430\u0449\u0438\u0442\u0435 \u0430\u0443\u0434\u0438\u043e\u0444\u0430\u0439\u043b \u0438\u043b\u0438 \u043d\u0430\u0436\u043c\u0438\u0442\u0435 \u0434\u043b\u044f \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438',
-  ref_transcript:'\u0422\u0440\u0430\u043d\u0441\u043a\u0440\u0438\u043f\u0442 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u0430', ref_opt:'(\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e \u2014 \u0430\u0432\u0442\u043e-\u0442\u0440\u0430\u043d\u0441\u043a\u0440\u0438\u043f\u0446\u0438\u044f)',
-  ref_text_ph:'\u0427\u0442\u043e \u0433\u043e\u0432\u043e\u0440\u0438\u0442\u0441\u044f \u0432 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u043d\u043e\u043c \u0430\u0443\u0434\u0438\u043e',
-  voice:'\u0413\u043e\u043b\u043e\u0441', voice_desc:'\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0433\u043e\u043b\u043e\u0441\u0430',
-  voice_desc_ph:'\u043d\u0430\u043f\u0440. "\u0421\u043f\u043e\u043a\u043e\u0439\u043d\u044b\u0439 \u043c\u043e\u043b\u043e\u0434\u043e\u0439 \u043c\u0443\u0436\u0441\u043a\u043e\u0439 \u0433\u043e\u043b\u043e\u0441 \u0441 \u0442\u0435\u043f\u043b\u043e\u0442\u043e\u0439"',
-  language:'\u042f\u0437\u044b\u043a',
-  l_auto:'\u0410\u0432\u0442\u043e',l_en:'\u0410\u043d\u0433\u043b\u0438\u0439\u0441\u043a\u0438\u0439',l_zh:'\u041a\u0438\u0442\u0430\u0439\u0441\u043a\u0438\u0439',l_ja:'\u042f\u043f\u043e\u043d\u0441\u043a\u0438\u0439',l_ko:'\u041a\u043e\u0440\u0435\u0439\u0441\u043a\u0438\u0439',
-  l_ru:'\u0420\u0443\u0441\u0441\u043a\u0438\u0439',l_es:'\u0418\u0441\u043f\u0430\u043d\u0441\u043a\u0438\u0439',l_fr:'\u0424\u0440\u0430\u043d\u0446\u0443\u0437\u0441\u043a\u0438\u0439',l_de:'\u041d\u0435\u043c\u0435\u0446\u043a\u0438\u0439',l_pt:'\u041f\u043e\u0440\u0442\u0443\u0433\u0430\u043b\u044c\u0441\u043a\u0438\u0439',l_ar:'\u0410\u0440\u0430\u0431\u0441\u043a\u0438\u0439',
-  speed:'\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c', temperature:'\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430',
-  text_label:'\u0422\u0435\u043a\u0441\u0442', text_ph:'\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0442\u0435\u043a\u0441\u0442 \u0434\u043b\u044f \u043e\u0437\u0432\u0443\u0447\u043a\u0438\u2026', chars:'\u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432',
-  advanced:'\u0414\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u043e',
-  instruction:'\u0418\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0438\u044f', instr_opt:'(\u043d\u0430\u043f\u0440. "\u0427\u0438\u0442\u0430\u0439 \u0432\u0435\u0441\u0435\u043b\u043e")',
-  instr_ph:'\u041c\u043e\u0434\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0441\u0442\u0438\u043b\u044f \u2014 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u0441 \u043b\u044e\u0431\u044b\u043c \u0442\u0438\u043f\u043e\u043c \u043c\u043e\u0434\u0435\u043b\u0438',
-  voice_override:'\u0418\u043c\u044f \u0433\u043e\u043b\u043e\u0441\u0430', override_opt:'(\u043f\u0435\u0440\u0435\u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0435\u043d\u0438\u0435)',
-  voice_over_ph:'\u0418\u043c\u044f \u0441\u043f\u0438\u043a\u0435\u0440\u0430 \u0434\u043b\u044f \u043c\u043e\u0434\u0435\u043b\u0435\u0439, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u044d\u0442\u043e \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044e\u0442',
-  rep_pen:'\u0428\u0442\u0440\u0430\u0444 \u043f\u043e\u0432\u0442\u043e\u0440\u0430',
-  generate:'\u0413\u0435\u043d\u0435\u0440\u0438\u0440\u043e\u0432\u0430\u0442\u044c', generating:'\u0413\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f\u2026', kbd_hint:'\u0434\u043b\u044f \u0433\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u0438',
-  download:'\u0421\u043a\u0430\u0447\u0430\u0442\u044c WAV',
-  st_ready:'\u041c\u043e\u0434\u0435\u043b\u044c \u0433\u043e\u0442\u043e\u0432\u0430', st_download:'\u0421\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435 \u043c\u043e\u0434\u0435\u043b\u0438\u2026',
-  st_loading:'\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u0432\u0435\u0441\u043e\u0432\u2026', st_generating:'\u0413\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f \u0440\u0435\u0447\u0438\u2026',
-  dur:'\u0414\u043b\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c',rtf:'\u0424\u0430\u043a\u0442\u043e\u0440 \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0433\u043e \u0432\u0440\u0435\u043c\u0435\u043d\u0438',proc:'\u041e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0430',mem:'\u041f\u0438\u043a\u043e\u0432\u0430\u044f \u043f\u0430\u043c\u044f\u0442\u044c',total:'\u041e\u0431\u0449\u0435\u0435 \u0432\u0440\u0435\u043c\u044f',fsize:'\u0420\u0430\u0437\u043c\u0435\u0440 \u0444\u0430\u0439\u043b\u0430',
-  m_title:'\u041c\u043e\u0434\u0435\u043b\u0438 Qwen3-TTS',
-  m_type:'\u0422\u0438\u043f', m_base:'\u041a\u043b\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0433\u043e\u043b\u043e\u0441\u0430 \u043f\u043e \u0430\u0443\u0434\u0438\u043e-\u043e\u0431\u0440\u0430\u0437\u0446\u0443 \u2014 \u0441\u0430\u043c\u044b\u0439 \u0433\u0438\u0431\u043a\u0438\u0439',
-  m_custom:'\u0413\u043e\u0442\u043e\u0432\u044b\u0435 \u043f\u0440\u0435\u0441\u0435\u0442-\u0433\u043e\u043b\u043e\u0441\u0430 (\u043d\u0430\u043f\u0440. Vivian) \u2014 \u0431\u044b\u0441\u0442\u0440\u044b\u0439 \u0441\u0442\u0430\u0440\u0442',
-  m_design:'\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0433\u043e\u043b\u043e\u0441\u0430 \u043f\u043e \u0442\u0435\u043a\u0441\u0442\u043e\u0432\u043e\u043c\u0443 \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u044e \u2014 \u0431\u0435\u0437 \u043e\u0431\u0440\u0430\u0437\u0446\u0430',
-  m_size:'\u0420\u0430\u0437\u043c\u0435\u0440', m_06:'\u041b\u0435\u0433\u0447\u0435, \u0431\u044b\u0441\u0442\u0440\u0435\u0435, \u043d\u0438\u0436\u0435 \u043f\u043e\u0442\u043e\u043b\u043e\u043a \u043a\u0430\u0447\u0435\u0441\u0442\u0432\u0430',
-  m_17:'\u041b\u0443\u0447\u0448\u0435\u0435 \u043a\u0430\u0447\u0435\u0441\u0442\u0432\u043e \u2014 \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0443\u0435\u0442\u0441\u044f \u0434\u043b\u044f \u043c\u043e\u0449\u043d\u043e\u0433\u043e \u0436\u0435\u043b\u0435\u0437\u0430',
-  m_prec:'\u0422\u043e\u0447\u043d\u043e\u0441\u0442\u044c', m_bf16:'\u041f\u043e\u043b\u043d\u0430\u044f \u0442\u043e\u0447\u043d\u043e\u0441\u0442\u044c \u2014 \u043b\u0443\u0447\u0448\u0435\u0435 \u043a\u0430\u0447\u0435\u0441\u0442\u0432\u043e, \u0431\u043e\u043b\u044c\u0448\u0435 \u043f\u0430\u043c\u044f\u0442\u0438 (~4.5 \u0413\u0411 \u0434\u043b\u044f 1.7B)',
-  m_8bit:'\u0425\u043e\u0440\u043e\u0448\u0438\u0439 \u0431\u0430\u043b\u0430\u043d\u0441 \u2014 \u043f\u043e\u0447\u0442\u0438 \u0442\u043e \u0436\u0435 \u043a\u0430\u0447\u0435\u0441\u0442\u0432\u043e, ~2\u00d7 \u043c\u0435\u043d\u044c\u0448\u0435',
-  m_4bit:'\u041c\u0438\u043d\u0438\u043c\u0430\u043b\u044c\u043d\u044b\u0439 \u2014 \u0431\u044b\u0441\u0442\u0440\u043e, \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u0430 \u043f\u043e\u0442\u0435\u0440\u044f \u043d\u044e\u0430\u043d\u0441\u043e\u0432 \u0438\u043d\u0442\u043e\u043d\u0430\u0446\u0438\u0438',
-  m_tip:'\u0414\u043b\u044f M4 Max: \u0431\u0435\u0440\u0438 1.7B + bf16. Base \u0434\u043b\u044f \u043a\u043b\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f, CustomVoice \u0434\u043b\u044f \u043f\u0440\u0435\u0441\u0435\u0442\u043e\u0432, VoiceDesign \u0434\u043b\u044f \u0433\u043e\u043b\u043e\u0441\u0430 \u043f\u043e \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u044e.',
-  v_vivian:'Vivian \u2014 \u044f\u0440\u043a\u0438\u0439, \u0434\u0435\u0440\u0437\u043a\u0438\u0439 \u0436\u0435\u043d\u0441\u043a\u0438\u0439 (zh)',
-  v_serena:'Serena \u2014 \u0442\u0451\u043f\u043b\u044b\u0439, \u043c\u044f\u0433\u043a\u0438\u0439 \u0436\u0435\u043d\u0441\u043a\u0438\u0439 (zh)',
-  v_uncle:'Uncle Fu \u2014 \u0437\u0440\u0435\u043b\u044b\u0439, \u043d\u0438\u0437\u043a\u0438\u0439 \u043c\u0443\u0436\u0441\u043a\u043e\u0439 (zh)',
-  v_dylan:'Dylan \u2014 \u0447\u0438\u0441\u0442\u044b\u0439, \u0435\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439 \u043c\u0443\u0436\u0441\u043a\u043e\u0439 (zh, \u041f\u0435\u043a\u0438\u043d)',
-  v_eric:'Eric \u2014 \u0436\u0438\u0432\u043e\u0439, \u0445\u0440\u0438\u043f\u043b\u043e\u0432\u0430\u0442\u044b\u0439 \u043c\u0443\u0436\u0441\u043a\u043e\u0439 (zh, \u0421\u044b\u0447\u0443\u0430\u043d\u044c)',
-  v_ryan:'Ryan \u2014 \u0434\u0438\u043d\u0430\u043c\u0438\u0447\u043d\u044b\u0439, \u0440\u0438\u0442\u043c\u0438\u0447\u043d\u044b\u0439 \u043c\u0443\u0436\u0441\u043a\u043e\u0439 (en)',
-  v_aiden:'Aiden \u2014 \u0441\u043e\u043b\u043d\u0435\u0447\u043d\u044b\u0439, \u0447\u0438\u0441\u0442\u044b\u0439 \u043c\u0443\u0436\u0441\u043a\u043e\u0439 (en)',
-  v_anna:'Ono Anna \u2014 \u0438\u0433\u0440\u0438\u0432\u044b\u0439, \u043b\u0451\u0433\u043a\u0438\u0439 \u0436\u0435\u043d\u0441\u043a\u0438\u0439 (ja)',
-  v_sohee:'Sohee \u2014 \u0442\u0451\u043f\u043b\u044b\u0439, \u044d\u043c\u043e\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0439 \u0436\u0435\u043d\u0441\u043a\u0438\u0439 (ko)',
-  style:'\u0421\u0442\u0438\u043b\u044c / \u042d\u043c\u043e\u0446\u0438\u044f',
-  e_neutral:'\u041d\u0435\u0439\u0442\u0440\u0430\u043b\u044c\u043d\u044b\u0439', e_happy:'\u0412\u0435\u0441\u0451\u043b\u044b\u0439', e_sad:'\u0413\u0440\u0443\u0441\u0442\u043d\u044b\u0439', e_angry:'\u0417\u043b\u043e\u0439',
-  e_calm:'\u0421\u043f\u043e\u043a\u043e\u0439\u043d\u044b\u0439', e_excited:'\u0412\u043e\u0437\u0431\u0443\u0436\u0434\u0451\u043d\u043d\u044b\u0439', e_whisper:'\u0428\u0451\u043f\u043e\u0442',
-  e_news:'\u0414\u0438\u043a\u0442\u043e\u0440 \u043d\u043e\u0432\u043e\u0441\u0442\u0435\u0439', e_story:'\u0420\u0430\u0441\u0441\u043a\u0430\u0437\u0447\u0438\u043a',
-  hist_title:'\u0418\u0441\u0442\u043e\u0440\u0438\u044f', hist_repeat:'\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c',
-  est_sec:'\u0441\u0435\u043a',
-  cancel:'\u041e\u0442\u043c\u0435\u043d\u0430', cancelled:'\u041e\u0442\u043c\u0435\u043d\u0435\u043d\u043e',
-},
-zh: {
-  model_type:'\u6a21\u578b\u7c7b\u578b',
-  t_custom:'Custom Voice', t_custom_d:'\u5185\u7f6e\u9884\u8bbe\u8bed\u97f3',
-  t_base:'Base', t_base_d:'\u4ece\u97f3\u9891\u514b\u9686\u8bed\u97f3',
-  t_design:'Voice Design', t_design_d:'\u4ece\u6587\u5b57\u63cf\u8ff0\u521b\u5efa\u8bed\u97f3',
-  size:'\u5927\u5c0f', s17:'1.7B \u2014 \u6700\u4f73\u8d28\u91cf', s06:'0.6B \u2014 \u66f4\u8f7b\u66f4\u5feb',
-  precision:'\u7cbe\u5ea6', q_bf16:'bf16 \u2014 \u5168\u7cbe\u5ea6', q_8bit:'8-bit \u2014 \u5747\u8861', q_4bit:'4-bit \u2014 \u6700\u5c0f',
-  custom_ph:'\u6216\u8f93\u5165\u4efb\u610f HuggingFace \u6a21\u578b ID',
-  ref_audio:'\u53c2\u8003\u97f3\u9891', ref_drop:'\u62d6\u653e\u97f3\u9891\u6587\u4ef6\u5230\u6b64\u5904\uff0c\u6216\u70b9\u51fb\u4e0a\u4f20',
-  ref_transcript:'\u53c2\u8003\u6587\u672c', ref_opt:'\uff08\u53ef\u9009 \u2014 \u7559\u7a7a\u81ea\u52a8\u8f6c\u5f55\uff09',
-  ref_text_ph:'\u53c2\u8003\u97f3\u9891\u4e2d\u8bf4\u4e86\u4ec0\u4e48',
-  voice:'\u8bed\u97f3', voice_desc:'\u8bed\u97f3\u63cf\u8ff0',
-  voice_desc_ph:'\u4f8b\u5982 "\u5e73\u9759\u6e29\u6696\u7684\u5e74\u8f7b\u7537\u6027\u58f0\u97f3"',
-  language:'\u8bed\u8a00',
-  l_auto:'\u81ea\u52a8',l_en:'\u82f1\u8bed',l_zh:'\u4e2d\u6587',l_ja:'\u65e5\u8bed',l_ko:'\u97e9\u8bed',
-  l_ru:'\u4fc4\u8bed',l_es:'\u897f\u73ed\u7259\u8bed',l_fr:'\u6cd5\u8bed',l_de:'\u5fb7\u8bed',l_pt:'\u8461\u8404\u7259\u8bed',l_ar:'\u963f\u62c9\u4f2f\u8bed',
-  speed:'\u901f\u5ea6', temperature:'\u6e29\u5ea6',
-  text_label:'\u6587\u672c', text_ph:'\u8f93\u5165\u8981\u5408\u6210\u7684\u6587\u672c\u2026', chars:'\u5b57\u7b26',
-  advanced:'\u9ad8\u7ea7\u9009\u9879',
-  instruction:'\u6307\u4ee4', instr_opt:'\uff08\u4f8b\u5982 "\u5f00\u5fc3\u5730\u6717\u8bfb"\uff09',
-  instr_ph:'\u4fee\u6539\u8bf4\u8bdd\u98ce\u683c \u2014 \u9002\u7528\u4e8e\u6240\u6709\u6a21\u578b\u7c7b\u578b',
-  voice_override:'\u8bed\u97f3\u540d\u79f0', override_opt:'\uff08\u8986\u76d6\uff09',
-  voice_over_ph:'\u652f\u6301\u6b64\u529f\u80fd\u7684\u6a21\u578b\u7684\u8bf4\u8bdd\u4eba\u540d\u79f0',
-  rep_pen:'\u91cd\u590d\u60e9\u7f5a',
-  generate:'\u751f\u6210', generating:'\u751f\u6210\u4e2d\u2026', kbd_hint:'\u5f00\u59cb\u751f\u6210',
-  download:'\u4e0b\u8f7d WAV',
-  st_ready:'\u6a21\u578b\u5c31\u7eea', st_download:'\u6b63\u5728\u4e0b\u8f7d\u6a21\u578b\u2026',
-  st_loading:'\u6b63\u5728\u52a0\u8f7d\u6743\u91cd\u2026', st_generating:'\u6b63\u5728\u751f\u6210\u8bed\u97f3\u2026',
-  dur:'\u65f6\u957f',rtf:'\u5b9e\u65f6\u56e0\u5b50',proc:'\u5904\u7406\u65f6\u95f4',mem:'\u5cf0\u503c\u5185\u5b58',total:'\u603b\u65f6\u95f4',fsize:'\u6587\u4ef6\u5927\u5c0f',
-  m_title:'Qwen3-TTS \u6a21\u578b',
-  m_type:'\u7c7b\u578b', m_base:'\u4ece\u97f3\u9891\u6837\u672c\u514b\u9686\u8bed\u97f3 \u2014 \u6700\u7075\u6d3b',
-  m_custom:'\u9884\u8bbe\u8bed\u97f3\uff08\u5982 Vivian\uff09\u2014 \u6700\u5feb\u4e0a\u624b',
-  m_design:'\u901a\u8fc7\u6587\u5b57\u63cf\u8ff0\u8bbe\u8ba1\u65b0\u8bed\u97f3 \u2014 \u65e0\u9700\u6837\u672c',
-  m_size:'\u5927\u5c0f', m_06:'\u66f4\u8f7b\u3001\u66f4\u5feb\uff0c\u8d28\u91cf\u4e0a\u9650\u8f83\u4f4e',
-  m_17:'\u6700\u4f73\u8d28\u91cf \u2014 \u63a8\u8350\u7528\u4e8e\u9ad8\u6027\u80fd\u786c\u4ef6',
-  m_prec:'\u7cbe\u5ea6', m_bf16:'\u5168\u7cbe\u5ea6 \u2014 \u6700\u4f73\u8d28\u91cf\uff0c\u5185\u5b58\u9700\u6c42\u6700\u5927\uff081.7B \u7ea6 4.5 GB\uff09',
-  m_8bit:'\u826f\u597d\u5e73\u8861 \u2014 \u8d28\u91cf\u63a5\u8fd1\uff0c\u4f53\u79ef\u51cf\u534a',
-  m_4bit:'\u6700\u5c0f \u2014 \u5feb\u901f\uff0c\u53ef\u80fd\u635f\u5931\u7ec6\u5fae\u8bed\u8c03',
-  v_vivian:'Vivian \u2014 \u660e\u4eae\u3001\u4e2a\u6027\u7684\u5973\u58f0 (zh)',
-  v_serena:'Serena \u2014 \u6e29\u6696\u3001\u67d4\u548c\u7684\u5973\u58f0 (zh)',
-  v_uncle:'Uncle Fu \u2014 \u6210\u719f\u3001\u4f4e\u6c89\u7684\u7537\u58f0 (zh)',
-  v_dylan:'Dylan \u2014 \u6e05\u6670\u3001\u81ea\u7136\u7684\u7537\u58f0 (zh, \u5317\u4eac)',
-  v_eric:'Eric \u2014 \u6d3b\u6cfc\u3001\u7565\u5e26\u6c99\u54d1\u7684\u7537\u58f0 (zh, \u56db\u5ddd)',
-  v_ryan:'Ryan \u2014 \u5145\u6ee1\u8282\u594f\u611f\u7684\u7537\u58f0 (en)',
-  v_aiden:'Aiden \u2014 \u9633\u5149\u3001\u6e05\u4eae\u7684\u7537\u58f0 (en)',
-  v_anna:'Ono Anna \u2014 \u4fd8\u76ae\u3001\u7075\u52a8\u7684\u5973\u58f0 (ja)',
-  v_sohee:'Sohee \u2014 \u6e29\u6696\u3001\u5bcc\u6709\u60c5\u611f\u7684\u5973\u58f0 (ko)',
-  style:'\u98ce\u683c / \u60c5\u611f',
-  e_neutral:'\u4e2d\u6027', e_happy:'\u5f00\u5fc3', e_sad:'\u60b2\u4f24', e_angry:'\u6124\u6012',
-  e_calm:'\u5e73\u9759', e_excited:'\u5174\u594b', e_whisper:'\u8033\u8bed',
-  e_news:'\u65b0\u95fb\u4e3b\u64ad', e_story:'\u8bb2\u6545\u4e8b',
-  hist_title:'\u5386\u53f2\u8bb0\u5f55', hist_repeat:'\u91cd\u590d',
-  est_sec:'\u79d2',
-  cancel:'\u53d6\u6d88', cancelled:'\u5df2\u53d6\u6d88',
-}
-};
-
-let lang = localStorage.getItem('tts-lang') || 'en';
-function t(k) { return (I[lang] && I[lang][k]) || I.en[k] || k; }
-
-function applyLang(l) {
-  lang = l;
-  localStorage.setItem('tts-lang', l);
-  document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
-  document.querySelectorAll('[data-tp]').forEach(el => { el.placeholder = t(el.dataset.tp); });
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
-  renderHistory();
-}
-
-document.querySelectorAll('.lang-btn').forEach(b => {
-  b.addEventListener('click', () => applyLang(b.dataset.lang));
-});
-
-const $ = s => document.querySelector(s);
-const $$ = s => document.querySelectorAll(s);
-
-const themeBtn = $('#theme-btn');
-let theme = localStorage.getItem('tts-theme') || 'light';
-function applyTheme(t) {
-  theme = t;
-  document.documentElement.dataset.theme = t;
-  localStorage.setItem('tts-theme', t);
-  themeBtn.innerHTML = t === 'dark' ? '&#9788;' : '&#9790;';
-  try { if (wavePeaks) drawWave(playerEl && playerEl.duration > 0 ? playerEl.currentTime / playerEl.duration : 0); } catch(e) {}
-}
-themeBtn.onclick = () => applyTheme(theme === 'dark' ? 'light' : 'dark');
-
-const typeCards    = $$('.type-card');
-const selSize      = $('#sel-size');
-const selQuant     = $('#sel-quant');
-const modelIdEl    = $('#model-id');
-const customEl     = $('#custom-model');
-const vsBase       = $('#vs-base');
-const vsCustom     = $('#vs-custom');
-const vsDesign     = $('#vs-design');
-const dropzone     = $('#dropzone');
-const refFileEl    = $('#ref-file');
-const refInfoEl    = $('#ref-info');
-const refNameEl    = $('#ref-name');
-const refRmBtn     = $('#ref-rm');
-const refTextWrap  = $('#ref-text-wrap');
-const langEl       = $('#lang');
-const speedEl      = $('#speed');
-const tempEl       = $('#temp');
-const textEl       = $('#text');
-const charsEl      = $('#chars');
-const genBtn       = $('#gen-btn');
-const genLabel     = $('#gen-label');
-const statusEl     = $('#status');
-const statusMsg    = $('#status-msg');
-const progressWrap = $('#progress-wrap');
-const progressFill = $('#progress-fill');
-const progressDet  = $('#progress-detail');
-const errorEl      = $('#error');
-const resultEl     = $('#result');
-const playerEl     = $('#player');
-const statsEl      = $('#stats');
-const dlBtn        = $('#dl-btn');
-const maxTokEl     = $('#max-tokens');
-const topPEl       = $('#top-p');
-const topKEl       = $('#top-k');
-const repPenEl     = $('#rep-pen');
-const advInstWrap  = $('#adv-instruct-wrap');
-const advVoiceWrap = $('#adv-voice-wrap');
-const emotionEl    = $('#emotion');
-const emotionWrap  = $('#emotion-wrap');
-const copyCliBtn   = $('#copy-cli');
-const previewBtn   = $('#preview-btn');
-const historyEl    = $('#history');
-const histListEl   = $('#hist-list');
-const cancelBtn    = $('#cancel-btn');
-const wpPlay       = $('#wp-play');
-const wpWave       = $('#wp-wave');
-const wpWaveWrap   = $('#wp-wave-wrap');
-const wpTime       = $('#wp-time');
-
-let currentType = 'CustomVoice';
-let refId = null;
-let busy = false;
-let charsPerSec = 0;
-const DESIGN_SIZES = new Set(['1.7B']);
-const genHistory = [];
-
-typeCards.forEach(c => c.addEventListener('click', () => {
-  if (!c.classList.contains('disabled')) setType(c.dataset.type);
-}));
-
-function setType(t) {
-  currentType = t;
-  typeCards.forEach(c => c.classList.toggle('active', c.dataset.type === t));
-  vsBase.hidden   = t !== 'Base';
-  vsCustom.hidden = t !== 'CustomVoice';
-  vsDesign.hidden = t !== 'VoiceDesign';
-  advVoiceWrap.hidden  = (t === 'CustomVoice');
-  advInstWrap.hidden   = (t === 'VoiceDesign');
-  emotionWrap.hidden   = (t === 'VoiceDesign');
-  if (t === 'VoiceDesign' && !DESIGN_SIZES.has(selSize.value)) selSize.value = '1.7B';
-  updateSizeConstraints();
-  updateModelId();
-}
-
-function updateSizeConstraints() {
-  const dc = document.querySelector('.type-card[data-type="VoiceDesign"]');
-  dc.classList.toggle('disabled', selSize.value === '0.6B');
-}
-
-selSize.addEventListener('change', () => {
-  if (!DESIGN_SIZES.has(selSize.value) && currentType === 'VoiceDesign') setType('CustomVoice');
-  updateSizeConstraints();
-  updateModelId();
-});
-selQuant.addEventListener('change', updateModelId);
-
-function getComposedModel() {
-  return `mlx-community/Qwen3-TTS-12Hz-${selSize.value}-${currentType}-${selQuant.value}`;
-}
-function getActiveModel() { return customEl.value.trim() || getComposedModel(); }
-function updateModelId() {
-  modelIdEl.textContent = getComposedModel();
-  modelIdEl.classList.toggle('overridden', !!customEl.value.trim());
-}
-customEl.addEventListener('input', updateModelId);
-
-speedEl.oninput  = () => { $('#speed-v').textContent = Number(speedEl.value).toFixed(1); };
-tempEl.oninput   = () => { $('#temp-v').textContent  = Number(tempEl.value).toFixed(2); };
-maxTokEl.oninput = () => { $('#tok-v').textContent   = maxTokEl.value; };
-topPEl.oninput   = () => { $('#topp-v').textContent  = Number(topPEl.value).toFixed(2); };
-topKEl.oninput   = () => { $('#topk-v').textContent  = topKEl.value; };
-repPenEl.oninput = () => { $('#repp-v').textContent  = Number(repPenEl.value).toFixed(2); };
-textEl.oninput   = () => { charsEl.textContent = textEl.value.length; };
-emotionEl.onchange = () => { $('#instruct').value = emotionEl.value; };
-
-dropzone.onclick = () => refFileEl.click();
-dropzone.ondragover = e => { e.preventDefault(); dropzone.classList.add('over'); };
-dropzone.ondragleave = () => dropzone.classList.remove('over');
-dropzone.ondrop = e => { e.preventDefault(); dropzone.classList.remove('over'); if (e.dataTransfer.files.length) uploadRef(e.dataTransfer.files[0]); };
-refFileEl.onchange = () => { if (refFileEl.files.length) uploadRef(refFileEl.files[0]); };
-
-async function uploadRef(file) {
-  const fd = new FormData(); fd.append('file', file);
-  try {
-    const r = await fetch('/api/upload-ref', { method: 'POST', body: fd });
-    const j = await r.json();
-    refId = j.ref_id;
-    refNameEl.textContent = j.filename || file.name;
-    refInfoEl.hidden = false; dropzone.hidden = true; refTextWrap.hidden = false;
-  } catch (e) { showError('Upload failed: ' + e.message); }
-}
-
-refRmBtn.onclick = () => {
-  if (refId) fetch(`/api/ref/${refId}`, { method: 'DELETE' }).catch(() => {});
-  refId = null; refInfoEl.hidden = true; dropzone.hidden = false; refTextWrap.hidden = true; refFileEl.value = '';
-};
-
-textEl.addEventListener('dragover', e => { e.preventDefault(); textEl.classList.add('drag-over'); });
-textEl.addEventListener('dragleave', () => textEl.classList.remove('drag-over'));
-textEl.addEventListener('drop', e => {
-  e.preventDefault(); textEl.classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if (!file) return;
-  if (file.name.endsWith('.txt') || file.name.endsWith('.srt')) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      let txt = reader.result;
-      if (file.name.endsWith('.srt'))
-        txt = txt.replace(/^\d+\s*$/gm, '')
-                 .replace(/\d{2}:\d{2}:\d{2}[.,]\d{3}\s*-->\s*\d{2}:\d{2}:\d{2}[.,]\d{3}\s*/gm, '')
-                 .replace(/\n{3,}/g, '\n\n').trim();
-      textEl.value = txt;
-      charsEl.textContent = txt.length;
-    };
-    reader.readAsText(file);
-  }
-});
-
-previewBtn.onclick = async () => {
-  if (previewBtn.classList.contains('loading')) return;
-  previewBtn.classList.add('loading'); previewBtn.textContent = '\u2026';
-  try {
-    const r = await fetch('/api/preview', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ voice: $('#voice').value, model: getActiveModel() }),
-    });
-    if (!r.ok) throw new Error(await r.text());
-    const blob = await r.blob();
-    const burl = URL.createObjectURL(blob);
-    const a = new Audio(burl);
-    a.onended = () => URL.revokeObjectURL(burl);
-    a.play();
-  } catch (e) { showError('Preview: ' + e.message); }
-  finally { previewBtn.classList.remove('loading'); previewBtn.innerHTML = '&#9654;'; }
-};
-
-copyCliBtn.onclick = () => {
-  const p = ['python -m mlx_audio.tts.generate'];
-  p.push('--model ' + getActiveModel());
-  p.push('--text "' + textEl.value.replace(/"/g, '\\"') + '"');
-  let v = '';
-  if (currentType === 'CustomVoice') v = $('#voice').value;
-  else if ($('#adv-voice').value.trim()) v = $('#adv-voice').value.trim();
-  if (v) p.push('--voice ' + v);
-  p.push('--speed ' + speedEl.value);
-  p.push('--temperature ' + tempEl.value);
-  if (langEl.value !== 'auto') p.push('--lang_code ' + langEl.value);
-  const ins = currentType === 'VoiceDesign' ? $('#voice-desc').value.trim() : $('#instruct').value.trim();
-  if (ins) p.push('--instruct "' + ins + '"');
-  p.push('--max_tokens ' + maxTokEl.value);
-  p.push('--top_p ' + topPEl.value);
-  p.push('--top_k ' + topKEl.value);
-  p.push('--repetition_penalty ' + repPenEl.value);
-  navigator.clipboard.writeText(p.join(' \\\n  ')).then(() => {
-    copyCliBtn.textContent = '\u2713';
-    setTimeout(() => copyCliBtn.textContent = 'CLI', 1200);
-  });
-};
-
-genBtn.onclick = doGenerate;
-document.addEventListener('keydown', e => {
-  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); doGenerate(); }
-});
-
-async function doGenerate() {
-  if (busy) return;
-  const text = textEl.value.trim();
-  if (!text) { textEl.focus(); return; }
-
-  busy = true;
-  genBtn.disabled = true; genBtn.classList.add('busy');
-  genLabel.textContent = t('generating');
-  playerEl.pause(); stopWaveAnim();
-  statusEl.hidden = true; statusMsg.textContent = '';
-  progressWrap.hidden = true; progressFill.style.width = '0';
-  errorEl.hidden = true; resultEl.hidden = true;
-
-  let voice = '';
-  if (currentType === 'CustomVoice') voice = $('#voice').value.trim();
-  else if ($('#adv-voice').value.trim()) voice = $('#adv-voice').value.trim();
-
-  let instruct = null;
-  if (currentType === 'VoiceDesign') instruct = $('#voice-desc').value.trim() || null;
-  else instruct = $('#instruct').value.trim() || null;
-
-  const body = {
-    text, model: getActiveModel(), voice,
-    speed: parseFloat(speedEl.value), temperature: parseFloat(tempEl.value),
-    max_tokens: parseInt(maxTokEl.value), lang_code: langEl.value,
-    ref_id: refId, ref_text: $('#ref-text').value.trim() || null, instruct,
-    top_p: parseFloat(topPEl.value), top_k: parseInt(topKEl.value),
-    repetition_penalty: parseFloat(repPenEl.value),
-  };
-
-  try {
-    const resp = await fetch('/api/generate', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
-    });
-    const reader = resp.body.getReader();
-    const decoder = new TextDecoder();
-    let buf = '', finished = false;
-    while (!finished) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buf += decoder.decode(value, { stream: true });
-      const lines = buf.split('\n'); buf = lines.pop();
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
-        const ev = JSON.parse(line.slice(6));
-        handleEvent(ev);
-        if (ev.s === 'done' || ev.s === 'error' || ev.s === 'cancelled') { finished = true; break; }
-      }
-    }
-  } catch (e) { showError('Network error: ' + e.message); }
-  finally {
-    busy = false; genBtn.disabled = false; genBtn.classList.remove('busy');
-    genLabel.textContent = t('generate');
-    statusEl.hidden = true;
-  }
-}
-
-cancelBtn.onclick = async () => {
-  cancelBtn.disabled = true;
-  cancelBtn.textContent = '…';
-  await fetch('/api/cancel', { method: 'POST' }).catch(() => {});
-};
-
-function handleEvent(ev) {
-  if (ev.s === 'done' || ev.s === 'error' || ev.s === 'cancelled') { statusEl.hidden = true; }
-  else { statusEl.hidden = false; cancelBtn.disabled = false; cancelBtn.textContent = t('cancel'); }
-
-  if (ev.s === 'loading') {
-    statusMsg.textContent = ev.cached ? t('st_ready') : t('st_loading');
-    progressWrap.hidden = true;
-  } else if (ev.s === 'downloading') {
-    statusMsg.textContent = t('st_download');
-    if (ev.pct != null && ev.pct > 0) {
-      progressWrap.hidden = false;
-      progressFill.style.width = ev.pct + '%';
-      progressDet.textContent = ev.detail || '';
-    }
-  } else if (ev.s === 'generating') {
-    let msg = t('st_generating');
-    if (charsPerSec > 0) {
-      const est = Math.ceil(textEl.value.trim().length / charsPerSec);
-      msg += ` (~${est} ${t('est_sec')})`;
-    }
-    statusMsg.textContent = msg;
-    progressWrap.hidden = true;
-  } else if (ev.s === 'done') {
-    showResult(ev.id, ev.stats);
-  } else if (ev.s === 'cancelled') {
-  } else if (ev.s === 'error') {
-    showError(ev.m);
-  }
-}
-
-let waveBuffer = null;
-let waveAnim = null;
-
-function fmtTime(s) {
-  if (!s || !isFinite(s)) return '0:00';
-  const m = Math.floor(s / 60);
-  return m + ':' + String(Math.floor(s % 60)).padStart(2, '0');
-}
-
-wpPlay.onclick = () => {
-  if (playerEl.paused) { playerEl.play(); } else { playerEl.pause(); }
-};
-playerEl.onplay = () => { wpPlay.innerHTML = '&#9612;&#9612;'; startWaveAnim(); };
-playerEl.onpause = () => { wpPlay.innerHTML = '&#9654;'; stopWaveAnim(); };
-playerEl.onended = () => { wpPlay.innerHTML = '&#9654;'; stopWaveAnim(); drawWave(1); };
-
-wpWaveWrap.onclick = (e) => {
-  if (!playerEl.duration) return;
-  const pct = (e.clientX - wpWave.getBoundingClientRect().left) / wpWave.clientWidth;
-  playerEl.currentTime = Math.max(0, Math.min(1, pct)) * playerEl.duration;
-  drawWave(pct);
-};
-
-function startWaveAnim() {
-  function tick() {
-    if (playerEl.paused) return;
-    const p = playerEl.duration > 0 ? playerEl.currentTime / playerEl.duration : 0;
-    drawWave(p);
-    wpTime.textContent = fmtTime(playerEl.currentTime) + ' / ' + fmtTime(playerEl.duration);
-    waveAnim = requestAnimationFrame(tick);
-  }
-  tick();
-}
-function stopWaveAnim() { if (waveAnim) { cancelAnimationFrame(waveAnim); waveAnim = null; } }
-
-let wavePeaks = null;
-
-function sizeCanvas() {
-  const dpr = window.devicePixelRatio || 1;
-  const w = wpWave.clientWidth, h = wpWave.clientHeight;
-  const cw = Math.round(w * dpr), ch = Math.round(h * dpr);
-  if (wpWave.width !== cw || wpWave.height !== ch) {
-    wpWave.width = cw; wpWave.height = ch;
-  }
-}
-
-function computePeaks() {
-  if (!waveBuffer) { wavePeaks = null; return; }
-  const w = wpWave.clientWidth;
-  const barW = 3, gap = 1, step = barW + gap;
-  const n = Math.floor(w / step);
-  const data = waveBuffer.getChannelData(0);
-  const spb = Math.floor(data.length / n);
-  const peaks = new Float32Array(n);
-  for (let i = 0; i < n; i++) {
-    let pk = 0;
-    const off = i * spb;
-    for (let j = 0; j < spb; j++) { const v = Math.abs(data[off + j] || 0); if (v > pk) pk = v; }
-    peaks[i] = pk;
-  }
-  wavePeaks = peaks;
-}
-
-function drawWave(progress) {
-  if (!wavePeaks) return;
-  sizeCanvas();
-  const dpr = window.devicePixelRatio || 1;
-  const c = wpWave, ctx = c.getContext('2d');
-  const w = c.clientWidth, h = c.clientHeight;
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, w, h);
-
-  const barW = 3, gap = 1, step = barW + gap;
-  const n = wavePeaks.length;
-  const cs = getComputedStyle(document.documentElement);
-  const colOn = cs.getPropertyValue('--wave-on').trim();
-  const colOff = cs.getPropertyValue('--wave-off').trim();
-  for (let i = 0; i < n; i++) {
-    const bh = Math.max(2, wavePeaks[i] * h * 0.9);
-    const x = i * step, y = (h - bh) / 2;
-    ctx.fillStyle = (i / n) <= progress ? colOn : colOff;
-    ctx.fillRect(x, y, barW, bh);
-  }
-}
-
-async function loadWaveform(url) {
-  try {
-    const resp = await fetch(url);
-    const buf = await resp.arrayBuffer();
-    const actx = new (window.AudioContext || window.webkitAudioContext)();
-    waveBuffer = await actx.decodeAudioData(buf);
-    actx.close();
-    sizeCanvas();
-    computePeaks();
-    drawWave(0);
-    wpTime.textContent = '0:00 / ' + fmtTime(waveBuffer.duration);
-  } catch (e) { waveBuffer = null; }
-}
-
-function showResult(audioId, stats) {
-  const url = `/api/audio/${audioId}`;
-  playerEl.src = url; playerEl.load();
-  dlBtn.href = url; dlBtn.download = `tts_${audioId.slice(0,8)}.wav`;
-  const labels = { duration:t('dur'), rtf:t('rtf'), proc:t('proc'), mem:t('mem'), total:t('total'), size:t('fsize') };
-  statsEl.innerHTML = '';
-  for (const [k, v] of Object.entries(stats || {}))
-    statsEl.innerHTML += `<span class="k">${labels[k]||k}</span><span class="v">${v}</span>`;
-  resultEl.hidden = false;
-  wpPlay.innerHTML = '&#9654;';
-
-  loadWaveform(url).then(() => {
-    playerEl.play().catch(() => {});
-  });
-
-  if (stats && stats.proc) {
-    const sec = parseFloat(stats.proc);
-    const len = textEl.value.trim().length;
-    if (sec > 0 && len > 0) charsPerSec = len / sec;
-  }
-
-  addToHistory(audioId, stats);
-  resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-function showError(msg) { errorEl.textContent = msg; errorEl.hidden = false; }
-
-function addToHistory(audioId, stats) {
-  genHistory.unshift({
-    id: audioId, text: textEl.value.trim(),
-    voice: currentType === 'CustomVoice' ? $('#voice').value : currentType,
-    stats, timestamp: Date.now(),
-    settings: {
-      type: currentType, size: selSize.value, quant: selQuant.value,
-      speed: speedEl.value, temp: tempEl.value, lang: langEl.value,
-      voiceName: $('#voice').value, voiceDesc: $('#voice-desc').value,
-      instruct: $('#instruct').value, emotion: emotionEl.value,
-      topP: topPEl.value, topK: topKEl.value, repPen: repPenEl.value,
-      maxTok: maxTokEl.value,
-    },
-  });
-  if (genHistory.length > 20) genHistory.pop();
-  renderHistory();
-}
-
-function renderHistory() {
-  if (genHistory.length === 0) { historyEl.hidden = true; return; }
-  historyEl.hidden = false;
-  histListEl.innerHTML = genHistory.map((h, i) => `
-    <div class="hist-item">
-      <div class="hist-meta">
-        <span class="hist-text">\u201c${esc(h.text.slice(0,60))}${h.text.length > 60 ? '\u2026' : ''}\u201d</span>
-        <span class="hist-voice">${esc(h.voice)}</span>
-      </div>
-      <audio controls src="/api/audio/${h.id}" preload="none"></audio>
-      <div class="hist-actions">
-        <span class="hist-time">${timeAgo(h.timestamp)}</span>
-        <button class="hist-btn" onclick="repeatHist(${i})">${t('hist_repeat')}</button>
-        <button class="hist-btn del" onclick="deleteHist(${i})">\u00d7</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-function repeatHist(i) {
-  const h = genHistory[i];
-  const s = h.settings;
-  setType(s.type);
-  selSize.value = s.size; selQuant.value = s.quant;
-  updateModelId(); updateSizeConstraints();
-  $('#voice').value = s.voiceName;
-  $('#voice-desc').value = s.voiceDesc;
-  $('#instruct').value = s.instruct;
-  emotionEl.value = s.emotion;
-  speedEl.value = s.speed; speedEl.oninput();
-  tempEl.value = s.temp; tempEl.oninput();
-  langEl.value = s.lang;
-  topPEl.value = s.topP; topPEl.oninput();
-  topKEl.value = s.topK; topKEl.oninput();
-  repPenEl.value = s.repPen; repPenEl.oninput();
-  maxTokEl.value = s.maxTok; maxTokEl.oninput();
-  textEl.value = h.text;
-  charsEl.textContent = h.text.length;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function deleteHist(i) { genHistory.splice(i, 1); renderHistory(); }
-
-function timeAgo(ts) {
-  const s = Math.floor((Date.now() - ts) / 1000);
-  if (s < 60) return '<1 min';
-  const m = Math.floor(s / 60);
-  return m < 60 ? m + ' min' : Math.floor(m / 60) + 'h ' + (m % 60) + 'm';
-}
-
-function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-$('#help-btn').onclick = showHelp;
-
-function showHelp() {
-  if ($('#modal-overlay')) return;
-  const html = `<div class="modal-overlay" id="modal-overlay">
-    <div class="modal">
-      <div class="modal-head">
-        <h2>${t('m_title')}</h2>
-        <button class="close" id="modal-close">&times;</button>
-      </div>
-      <h3>${t('m_type')}</h3>
-      <dl>
-        <dt>Base</dt><dd>${t('m_base')}</dd>
-        <dt>Custom Voice</dt><dd>${t('m_custom')}</dd>
-        <dt>Voice Design</dt><dd>${t('m_design')}</dd>
-      </dl>
-      <h3>${t('m_size')}</h3>
-      <dl>
-        <dt>0.6B</dt><dd>${t('m_06')}</dd>
-        <dt>1.7B</dt><dd>${t('m_17')}</dd>
-      </dl>
-      <h3>${t('m_prec')}</h3>
-      <dl>
-        <dt>bf16</dt><dd>${t('m_bf16')}</dd>
-        <dt>8-bit</dt><dd>${t('m_8bit')}</dd>
-        <dt>4-bit</dt><dd>${t('m_4bit')}</dd>
-      </dl>
-    </div>
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend', html);
-  $('#modal-close').onclick = closeHelp;
-  $('#modal-overlay').onclick = e => { if (e.target === e.currentTarget) closeHelp(); };
-  document.addEventListener('keydown', _escHelp);
-}
-function _escHelp(e) { if (e.key === 'Escape') closeHelp(); }
-function closeHelp() {
-  const el = $('#modal-overlay');
-  if (el) el.remove();
-  document.removeEventListener('keydown', _escHelp);
-}
-
-applyTheme(theme);
-applyLang(lang);
-updateModelId();
-updateSizeConstraints();
-
-window.addEventListener('resize', () => {
-  if (waveBuffer) { sizeCanvas(); computePeaks(); drawWave(playerEl.duration > 0 ? playerEl.currentTime / playerEl.duration : 0); }
-});
-</script>
+<script type="module" src="/static/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,24 @@
+services:
+  tts-studio:
+    build: .
+    ports:
+      - "${MLX_TTS_PORT:-7860}:7860"
+    volumes:
+      - model-cache:/root/.cache/huggingface
+      - ./app:/app/app:ro
+    environment:
+      - MLX_TTS_HOST=0.0.0.0
+      - MLX_TTS_PORT=7860
+      - MLX_TTS_NO_BROWSER=1
+      - MLX_TTS_AUDIO_TTL=${MLX_TTS_AUDIO_TTL:-7200}
+      - MLX_TTS_MAX_AUDIO=${MLX_TTS_MAX_AUDIO:-200}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/api/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+volumes:
+  model-cache:

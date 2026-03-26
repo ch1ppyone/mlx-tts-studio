@@ -2,9 +2,14 @@
 __pycache__/
 *.pyc
 *.pyo
+.git/
 .DS_Store
 *.egg-info/
 dist/
 build/
+assets/
+run.sh
 .env
+README.md
 README_RU.md
+LICENSE
