@@ -94,6 +94,11 @@ export function switchEngine(id) {
   const hasTypes = cap.type_cards && cap.type_cards.length > 0;
   collapseEl(typeSection, !hasTypes);
 
+  const voiceFilterInput = $('#voice-filter');
+  if (voiceFilterInput && !cap.voice_filter) {
+    voiceFilterInput.value = '';
+  }
+
   if (hasTypes) {
     buildTypeCards(cap.type_cards);
     const savedType = S.currentType;
@@ -232,9 +237,10 @@ export function buildModelSelect(eng) {
 export function buildVoiceSelect(eng) {
   const sel = $('#sel-voice');
   if (!sel) return;
+  const cap = eng.capabilities || {};
   const filterInput = $('#voice-filter');
-  const filterVal = filterInput ? filterInput.value.toLowerCase() : '';
-  const langChip = S.langChip || 'all';
+  const filterVal = cap.voice_filter && filterInput ? filterInput.value.toLowerCase() : '';
+  const langChip = cap.voice_filter ? (S.langChip || 'all') : 'all';
 
   sel.innerHTML = '';
   const groups = {};
